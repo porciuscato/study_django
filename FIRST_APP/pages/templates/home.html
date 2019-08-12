@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <h1>DTL(Django Template Language) 관련 문법</h1>
+  <ul>
+    <li>for</li>
+    <li>if</li>
+    <li>helper or filter</li>
+    <li></li>
+  </ul>
+  
+  <h1>데이터를 넘겨 받는 법</h1>
+  <p>{{name}}</p>
+  {% for item in data %}
+  <p>{{item}}</p>
+  {% endfor %}
+
+  <h2>데이터가 없을 때, </h2>
+  {% for movie in empty_data %}
+    <p> {{ forloop.counter }}: {{ movie }}</p>
+  {% empty %}
+    <p>영화 데이터가 없습니다.</p>
+  {% endfor %}
+
+
+  <h2>이중 for문은?</h2>
+  {% for array in matrix %}
+  {% for num in array %}
+    {{ num }}
+  {% endfor %}
+  {% endfor %}
+
+<h2>다양한 helper or filter</h2>
+<p>{% lorem 3 p random %}</p>
+ 
+
+<h3>filter</h3>
+<h4>str</h4>
+{% for movie in empty_data %}
+ {{ movie| length}}
+ {{ movie| truncatechars:5}}
+{% endfor %}
+
+<h4>int</h4>
+{{ number|add:10 }}
+<!-- 그러나 이런 건 좋지 않은 컨벤션. 자료 처리는 서버에서 해주고 넘겨야 한다. -->
+
+<h4>datetime</h4>
+{% now 'Y M D' %}
+{% now 'h시 i분 a' %}
+
+</body>
+</html>
