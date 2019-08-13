@@ -1,4 +1,4 @@
-"""first_app URL Configuration
+"""practice_2 URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.2/topics/http/urls/
@@ -14,21 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-from pages import views
+from django.urls import path
+from workshop import views as workshop_views
 
 urlpatterns = [
-    path('', views.index),
-    # path 함수는 
-    # 첫번째 인자 : 주문서(url 경로)
-    # 두번째 인자 : view 함수의 위치
     path('admin/', admin.site.urls),
-    # pages 앱 안에 있는 index를 찾아가라
-    path('index/', views.index),
-    # 장고는 trailing comma를 붙이는 것이 컨벤션. 지금까지는 안 썼음
-    path('home/',views.home),
-    path('lotto/',views.lotto),
-    path('cube/<int:num>/', views.cube),
-    path('match/',views.match),
-    path('artii/', include('artii.urls')),
+    path('num/push/',workshop_views.push_number),
+    path('num/pull/',workshop_views.pull_number)
 ]

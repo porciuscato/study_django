@@ -1,13 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-</head>
-<body>
-  <h1>DTL(Django Template Language) 관련 문법</h1>
+{% extends 'base.html' %}
+{% block body %}
+<h1>DTL(Django Template Language) 관련 문법</h1>
   <ul>
     <li>for</li>
     <li>if</li>
@@ -55,5 +48,4 @@
 {% now 'Y M D' %}
 {% now 'h시 i분 a' %}
 
-</body>
-</html>
+{% endblock %}

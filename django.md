@@ -1,5 +1,17 @@
 # django
 
+##  django 기본
+
+`django-admin startproject [프로젝트 이름] [경로]` : 장고 시작 명령
+
+`python manage.py runserver` : localhost:8000 으로 들어가면 됨. 서버 실행 명령
+
+`python manage.py startapp [앱이름] ` : 앱을 만드는 명령어
+
+
+
+
+
 ## 8월 12일
 
 flask로 했던 것을 django로 옮기는 과정.
@@ -94,7 +106,7 @@ V가 모델과 템플릿을 관리하는 걸로 되어있다.
 
 - M: model - 데이터를 관리
 - T:  Template - 사용자가 보는 화면 (html을 만들어주는 것)
-- V: 중간관리자.
+- V: View. 중간관리자.
 
 
 
@@ -824,3 +836,483 @@ def match(request):
 </form>
 ```
 
+
+
+
+
+
+
+# 8월 13일
+
+DRY : do not repeat yourself
+
+장고가 지원하는 
+
+path 설정을 할 때, 꼭 하나의 path가 하나로 연결되어야 하는 것은 아니다.
+
+root를 설정하는 법
+
+```python
+urlpatterns = [
+    path('', views.index),
+]
+```
+
+
+
+### 템플릿 상속
+
+네비게이션 바를 하나하나 넣어주기 번거로우니까 템플릿 상속을 통해 이 문제를 해결해보자
+
+1. 공통적으로 쓸 템플릿(코드)을 뽑아낸다.
+2. 해당 파일을 따로 만들고,
+3. 활용할 다른 템플릿 파일에서 불러와 쓴다.
+
+
+
+1. 뽑아오기
+
+- templates에 base.html을 만들자. 
+
+  ```html
+  <!doctype html>
+  <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+      <title>Documnet</title>
+      {% block style%}
+      {% endblock %}
+    </head>
+    <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/index/">잡화점</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="/index/">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/cube/">세제곱계산기</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/lotto/">로또</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/home/">DTL 정리</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  
+      {% block body %}
+      {% endblock %}
+  
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </body>
+  </html>
+  ```
+
+
+
+- nav 바 하단부가 달라지니, 구멍을 뚫어보자.
+
+  - 이때 body 또는 content를 많이 쓴다. 구멍을 뚫고 이름을 body라고 지음
+
+  ```html
+  </nav>
+  
+      {% block body %}
+      {% endblock %}
+  
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  ```
+
+
+
+- 이걸 home.html에 적용해보자. 방금 만든 템플릿을 쓰려한다면?
+
+  - base에 들어있는 태그들은 모두 날린다.
+
+    ```html
+    <h1>DTL(Django Template Language) 관련 문법</h1>
+    <ul>
+      <li>for</li>
+      <li>if</li>
+      <li>helper or filter</li>
+      <li></li>
+    </ul>
+    
+    <h1>데이터를 넘겨 받는 법</h1>
+    <p>{{name}}</p>
+    {% for item in data %}
+    <p>{{item}}</p>
+    {% endfor %}
+    
+    <h2>데이터가 없을 때, </h2>
+    {% for movie in empty_data %}
+    <p> {{ forloop.counter }}: {{ movie }}</p>
+    {% empty %}
+    <p>영화 데이터가 없습니다.</p>
+    {% endfor %}
+    
+    
+    <h2>이중 for문은?</h2>
+    {% for array in matrix %}
+    {% for num in array %}
+    {{ num }}
+    {% endfor %}
+    {% endfor %}
+    
+    <h2>다양한 helper or filter</h2>
+    <p>{% lorem 3 p random %}</p>
+    
+    
+    <h3>filter</h3>
+    <h4>str</h4>
+    {% for movie in empty_data %}
+    {{ movie| length}}
+    {{ movie| truncatechars:5}}
+    {% endfor %}
+    
+    <h4>int</h4>
+    {{ number|add:10 }}
+    <!-- 그러나 이런 건 좋지 않은 컨벤션. 자료 처리는 서버에서 해주고 넘겨야 한다. -->
+    
+    <h4>datetime</h4>
+    {% now 'Y M D' %}
+    {% now 'h시 i분 a' %}
+    ```
+
+  - 이 컨텐츠를 아까 만든 템플릿에 넣어보자.
+
+    ```html
+    {% extends 'base.html' %}
+    {% block body %}
+    
+    이 안에 위의 코드를 넣으면 된다.
+    
+    {% endblock %}
+    ```
+
+    => base.html 파일을 가져온다. block을 뚫어놓고 이름을 body라 지정했는데 이 안에 우리가 쓴 코드를 넣겠다! 는 뜻. 
+
+  - ex)
+
+    ```html
+    {% extends 'base.html' %}
+    {% block style %}
+    <style>
+        p {
+          margin: 0;
+        }
+        .box {
+          display: flex;
+          justify-content: start;
+        }
+        .ball {
+          margin: 10px;
+          height: 30px;
+          width: 30px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-content: center;
+        }
+        .b1 {
+          border: 1px solid gold;
+          background-color: gold;
+        }
+        .b2 {
+          border: 1px solid orangered;
+          background-color: orangered;
+        }
+        .b3 {
+          border: 1px solid cornflowerblue;
+          background-color: cornflowerblue;
+        }
+        .b4 {
+          border: 1px solid seagreen;
+          background-color: seagreen;
+        }
+        .b5 {
+          border: 1px solid yellowgreen;
+          background-color: yellowgreen;
+        }
+        .numbers {
+          line-height: 30px;
+          color: white;
+        }
+      </style>
+    {% endblock %}
+    
+    {% block body %}
+    <div class="box">
+        {% for num in lotto %}
+          {% if num > 40 %}
+            <div class="ball b5">
+              <p class="numbers">{{ num }}</p>
+            </div>
+          {% elif num > 30 %}
+            <div class="ball b4">
+              <p class="numbers">{{ num }}</p>
+            </div>
+          {% elif num > 20 %}
+            <div class="ball b3">
+              <p class="numbers">{{ num }}</p>
+            </div>
+          {% elif num > 10 %}
+            <div class="ball b2">
+              <p class="numbers">{{ num }}</p>
+            </div>
+          {% else %}
+            <div class="ball b1">
+              <p class="numbers">{{ num }}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+        </div>
+    {% endblock %}
+    ```
+
+    
+
+
+
+전체 구조가 더 요약된 문서를 가지고 싶다면??
+
+*partial template*
+
+- _footer.html을 따로 만들고
+
+  ```html
+  <footer class="fixed-bottom d-flex justify-content-center">
+    <p>Made by Cato</p>
+  </footer>
+  ```
+
+- _nav.html을 따로 만들자
+
+  ```html
+  <nav class="sticky-top navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/index/">잡화점</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/index/">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/cube/">세제곱계산기</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/lotto/">로또</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/home/">DTL 정리</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  ```
+
+  
+
+- extends라는 명령어는 base를 쓰기 위한 명령어
+
+- 우리가 원하는 기능은 `include` : partial rendering
+
+  ```html
+  <!doctype html>
+  <html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+      <title>Documnet</title>
+      {% block style%}
+      {% endblock %}
+    </head>
+    <body>
+      
+      {% include '_nav.html' %}
+  
+      {% block body %}
+      {% endblock %}
+  
+      {% include '_footer.html' %}
+  
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </body>
+  </html>
+  ```
+
+  
+
+---
+
+ASCII ART
+
+khanacademy
+
+
+
+### artii 만들기
+
+1. 사용자의 입력을 받아
+   - /artii/
+2. artii API를 통해 ascii art를 보여주는 앱
+   - /artii/result 
+
+
+
+
+
+
+
+1. 수퍼 공통 템플릿으로 만들기 위한 방법은??
+2. 앱도 엄청나게 많아지면 어떻게 처리할 것인가?? 
+
+
+
+지금은 메인 문지기 하나다. 서버에 요청이 오면 urls.py가 혼자서 pages 안에 view 하나, artii 안에 view도 하나. 혼자가 배달을 다 하고 있다. 부서별로 중간 다리 url을 만들 것. 
+
+1) 앱들을 기능상으로 분리하고
+
+2) 지금은 템플릿을 다 만드니까... 중복된 것들을 높은 수준에서 템플릿으로 만드는 것
+
+
+
+우선...
+
+새끼 url들을 만들어보자
+
+1. artii 앱 밑에 urls.py를 만들자.
+
+2. 앞으로 artii 관련된 파트는.. artii의 문지기한테 보내라는 형태로 보낼 것.
+
+   1. 지금까지는 path만 썼는데 include를 써보자.
+
+   ```python
+   path('artii/', include('artii.urls')),
+   ```
+
+   2. 이 친구를 알려줘라
+
+   ```python
+   from django.urls import path, include
+   ```
+
+   3. 이렇게 되면 artii 관련 요청이 오면 아티의 urls이 작동한다.
+
+   ```python
+   from django.urls import path
+   from . import views
+   # . 형제이기 때문에 현재 폴더에서 가져오겠다는 뜻의 점
+   
+   urlpatterns = [
+       path('', views.artii),
+       path('result/',views.result),
+   ]
+   ```
+
+   
+
+
+
+템플릿을 찾을 때 templates를 먼저 뒤지고, 없으면 다른 앱의 templates를 찾는다. 위로는 가지 않는다. 위로 가게 하려면!
+
+settings.py
+
+`DIRS` 가 중요
+
+```python
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+```
+
+경로를 만들어서 넣어야 하는데, 직접 넣을 경우 에러가 생김
+
+BASE_DIR
+
+새로운 경로를 알려줘야하는데, base_dir에 first_app의 templates 까지 들어가도록 만들어야 한다.
+
+
+
+`vi direct.py`
+
+import os
+
+os.path()
+
+
+
+++ current directory를 따는 법?
+
+```python
+os.getcwd() : 현재 폴더를 알려줌
+current = os.getcwd()
+os.path.join() : 폴더들을 합쳐서 하나의 긴 문자열로 만들어준다.
+print(os.path.join(current, 'templates'))
+```
+
+그 뒤에 여러 폴더 이름들을 넣어주면 된다.
+
+
+
+=>
+
+```python
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'first_app','templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+```
+
+
+
+굳이 뽑아놓을 필요는 없다. 다른 앱의 templates를 찾기 때문에
+
+
+
+
+
+동일한 이름일 경우 혼동이 생길 수 있다.
+
+그러므로 앱의 templates 밑에다가 본인의 앱과 동일한 이름으로 디렉터리를 만든다.
