@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block body %}
+<h2>블로그</h2>
+<form action="/articles/create" method='GET'>
+제목 : <input type="text" name='title'><br>
+이미지 : <input type="text" name="image_url"> <br>
+내용 : <textarea name="content" id="" cols="30" rows="10"></textarea>
+
+<button type='submit'>글쓰기</button>
+</form>
+{% endblock %}

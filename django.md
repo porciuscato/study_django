@@ -348,7 +348,7 @@ views.py에 들어가서
 이때 항상 request라는 인자를 넣어주어야 함
 
 ```python
-def index(requset):
+def index(request):
 ```
 
 
@@ -356,7 +356,7 @@ def index(requset):
 플라스크처럼 문자열을 반환할 수 있을까?
 
 ```python
-def index(requset):
+def index(request):
     return 'hello'
 ```
 

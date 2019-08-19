@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block body %}
+{% for article in articles %}
+  <h3>제목: {{ article.title }}</h3>
+  <p> 내용: {{ article.content }} </p>
+  <p> 이미지: <img src="{{ article.image_url }}" alt=""></p>
+  <p> 작성일자: {{ article.created_at }}</p>
+  <!-- <h2>{{blog.title}}</h2>  
+  <p>{{blog.content}}</p>
+  <p>{{blog.created_at}}</p> -->
+{% endfor %}
+{% endblock %}
