@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container">
+  <a class="btn btn-success" href="/posts/{{ post.id }}/edit">수정</a>
+  <a class="btn btn-danger" href="/posts/{{ post.id }}/delete/">삭제</a>
+  <h1>{{ post.title }}</h1>
+  <p>{{ post.content}}</p>
+  <img src="{{ post.img_url }}" alt="">
+  <p>{{ post.created_at }}</p>
+  <p>{{ post.updated_at }}</p>
+</div>
+{% endblock %}
