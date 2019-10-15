@@ -21,5 +21,3 @@ class Article(models.Model):
         return reverse('articles:detail', kwargs={'pk':self.pk})
         # 자기가 가진 pk로 url을 생성
         # 객체를 넘기더라도, reverse함수의 결과물인 url이 나오기 때문에 redirect가 된다.
-
-        

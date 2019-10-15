@@ -8,4 +8,14 @@
 <p>{{ article.updated_at|date:"SHORT_DATE_FORMAT" }}</p>
 <!-- <p>{{ article.updated_at|date:"Y년 M j일" }}</p> -->
 <a href="{% url 'articles:index' %}">홈으로</a>
+<br>
+<a href="{% url 'articles:update' article.pk %}">수정</a>
+<!-- a 태그는 기본적으로 get으로 보냄 -->
+<!-- <a href="{% url 'articles:delete' article.pk %}">삭제</a> -->
+<!-- POST로 보내기 위해선 form을 만들면 됨 -->
+<form action="{% url 'articles:delete' article.pk %}" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="삭제">
+</form>
+
 {% endblock %}

@@ -255,3 +255,64 @@ auth 서비스를 그냥 씀
 
 가장 중요한 건 DRY
 
+
+
+
+
+# 10월 15일
+
+IPython embed function
+
+python manage.py shell_plus
+
+
+
+`embed()` : 일종의  프리즈. 날아가는 정보를 멈춰놓고 날아가는 데이터를 볼 수 있음
+
+를 추가하면
+
+runserver 도중에 쉘이 켜진다.
+
+IPython은 장고랑 상관없음.
+
+
+
+새글쓰기를 하니 서버가 멈추고 shell_plus가 떴음
+
+form을 치면 어떤 객체가 튀어나옴
+
+request.POST
+
+
+
+cleaned_data : 유효성 검사가 끝난 것
+
+어디서 데이터가 안 넘어오는지 확인할 수 있음
+
+embed()라는 함수를 사용하면 됨
+
+
+
+form.as_p()
+
+form.as_table()
+
+form.as_ul()
+
+
+
+http는 무상태성이다?
+
+http는 
+
+
+
+
+
+comment 생성 & 삭제
+
+-- POST /articles/:id/comments
+
+-- POST /articles/:id/comments_delete/:c_id
+
+-- ModelForm 활용
