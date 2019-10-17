@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Article
-from .forms import ArticleForm
+from .forms import ArticleForm, CommentForm
 from IPython import embed
 from django.http import Http404
 from django.views.decorators.http import require_POST
@@ -23,9 +23,12 @@ def detail(request, pk):
         article = Article.objects.get(pk=pk)
     except Article.DoesNotExist:
         raise Http404('해당하는 ID의 글이 존재하지 않습니다.')
-    
+    comment_form = CommentForm()
+
     context = {
         'article' : article,
+        'comment_form' : comment_form,
+        'comments' : article.comment_set.all(),
     }
     return render(request, 'articles/detail.html', context)
 
@@ -132,3 +135,18 @@ def delete(request, pk):
         return redirect('articles:index')
     else:
         return redirect(article)
+
+def create_comment(request, pk):
+    article = Article.objects.get(pk=pk)
+    if request.method == 'POST':
+        comment_form = CommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False) # commit은 데이터베이스 커밋. 커밋을 안 하고 저장부터 하겠다. 그러면 저장 직전에 객체를 만든다.
+            comment.article_id = pk # DB에는 실제로 article_id 로 저장되어 있음
+            comment.save() # 이렇게 하면 실제 DB에 반영이 된다.
+            ###################
+            # Article.objects.objects.get(pk=article_pk)
+            # comment.article = article
+
+    # return redirect('articles:detail', article_pk)
+    return redirect(article)

@@ -21,3 +21,15 @@ class Article(models.Model):
         return reverse('articles:detail', kwargs={'pk':self.pk})
         # 자기가 가진 pk로 url을 생성
         # 객체를 넘기더라도, reverse함수의 결과물인 url이 나오기 때문에 redirect가 된다.
+
+class Comment(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    content = models.CharField(max_length=150)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('-pk',)
+
+    def __str__(self):
+        return self.content
