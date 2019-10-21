@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Article
 from .forms import ArticleForm, CommentForm
 from IPython import embed
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 def index(request):
@@ -44,7 +46,13 @@ def detail(request, pk):
 #     else:
 #         return render(request, 'articles/create.html')
 
+#/accounts/login
+# @login_required(login_url='/accounts/login')
+@login_required
 def create(request):
+    # # if request.user.is_anonynous:
+    # if not request.user.is_authenticated:
+    #     return redirect('accounts:login')
     if request.method == 'POST':
         form = ArticleForm(request.POST)
         embed()
@@ -91,6 +99,7 @@ def create(request):
 
 
 # update -> articles/:id/update | (PUT) articles/:id
+@login_required
 def update(request, pk):
     article = get_object_or_404(Article, pk=pk)
     if request.method == 'POST':
@@ -127,15 +136,20 @@ def update(request, pk):
 # delete -> article/:id/delete
 # POST일 때만 반응하도록 만드는 것
 @require_POST
+@login_required
 def delete(request, pk):
-    # POST로 요청이 올 때만, 지우는 걸로
-    article = get_object_or_404(Article, pk=pk)
-    if request.method == 'POST':
-        article.delete()
-        return redirect('articles:index')
-    else:
-        return redirect(article)
+    if request.user.is_authenticated:
+        # POST로 요청이 올 때만, 지우는 걸로
+        article = get_object_or_404(Article, pk=pk)
+        if request.method == 'POST':
+            article.delete()
+            return redirect('articles:index')
+        else:
+            return redirect(article)
+    # 401 에러를 리턴
+    return HttpResponse('검증되지 않은 유저 정보', status=401)
 
+@login_required
 def create_comment(request, pk):
     article = Article.objects.get(pk=pk)
     if request.method == 'POST':

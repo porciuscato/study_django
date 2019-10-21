@@ -12,7 +12,21 @@
   <title>Article</title>
 </head>
 <body>
+  <div class="container">
+    {% if user.is_authenticated %}
+      <p>안녕! {{ user.username }}</p>
+      <a href="{% url 'accounts:logout' %}">로그아웃</a>
+      <form action="{% url 'accounts:delete' %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="회원탈퇴" class="btn btn-danger">
+      </form>
+    {% else %}
+      <a href="{% url 'accounts:login' %}">로그인</a>
+      <a href="{% url 'accounts:signup' %}">회원가입</a>
+    {% endif %}
+    
     {% block body %}
     {% endblock %}
+  </div>
 </body>
 </html>
