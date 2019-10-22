@@ -1,10 +1,12 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
+from django.contrib.auth import update_session_auth_hash
 from IPython import embed
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from .forms import CustomUserChangeForm
 
 # Create your views here.
 def signup(request):
@@ -22,7 +24,7 @@ def signup(request):
     context = {
         'form' : form,
     }
-    return render(request, 'accounts/signup.html', context)
+    return render(request, 'accounts/auth_form.html', context)
 
 # 함수 안에 함수를 넣는 것. 이 함수를 돌리기 전에 이걸 하라는 뜻
 # @login_require
@@ -49,7 +51,7 @@ def login(request):
     context = {
         'form' : form,
     }
-    return render(request, 'accounts/login.html', context)
+    return render(request, 'accounts/auth_form.html', context)
 
 
 def logout(request):
@@ -65,3 +67,37 @@ def delete(requests):
     # user.delete()
     requests.user.delete()
     return redirect('articles:index')
+
+@login_required
+def update(request):
+    if request.method == 'POST':
+        # 실제 DB에 적용
+        # 인자 하나가 오면 새로 생성, 둘이 오면 수정임을 안다.
+        form = CustomUserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect('articles:index')
+    else:
+        # 편집 화면 보여줌 
+        form = CustomUserChangeForm(instance=request.user)
+        context = {
+            'form' : form,
+        }
+        return render(request, 'accounts/auth_form.html', context)
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            # session auth hash가 변경되면서 기존의 유저와 다르다고 인식
+            update_session_auth_hash(request, form.user)
+            return redirect('articles:index')
+    else:
+        # 편집 화면 보여줌(form)
+        form = PasswordChangeForm(request.user)
+        context = {
+            'form' : form,
+        }
+        return render(request, 'accounts/auth_form.html', context)

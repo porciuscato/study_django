@@ -15,7 +15,9 @@
   <div class="container">
     {% if user.is_authenticated %}
       <p>안녕! {{ user.username }}</p>
-      <a href="{% url 'accounts:logout' %}">로그아웃</a>
+      <a class='btn btn-info' href="{% url 'accounts:update' %}">회원정보 수정</a>
+      <a class='btn btn-secondary' href="{% url 'accounts:logout' %}">로그아웃</a>
+      <a class='btn btn-primary' href="{% url 'accounts:change_password' %}">비밀번호수정</a>
       <form action="{% url 'accounts:delete' %}" method="POST">
         {% csrf_token %}
         <input type="submit" value="회원탈퇴" class="btn btn-danger">

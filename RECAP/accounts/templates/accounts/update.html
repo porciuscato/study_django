@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block body %}
+<h1>회원정보 수정</h1>
+<a class='btn btn-secondary' href="{% url 'accounts:change_password' %}">비밀번호수정</a>
+<form method='POST'>
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  {% buttons submit="정보수정" %}{% endbuttons %}
+</form>
+{% endblock %}

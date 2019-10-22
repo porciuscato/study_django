@@ -5,13 +5,14 @@
 <h4>{{ article.title }}</h4>
 <p>{{ article.pk }}</p>
 <p>{{ article.content }}</p>
+<p>{{ article.user.first_name }}</p>
 <p>{{ article.created_at|date:"Y년 M j일" }}</p>
 <p>{{ article.updated_at|date:"SHORT_DATE_FORMAT" }}</p>
 <!-- <p>{{ article.updated_at|date:"Y년 M j일" }}</p> -->
 <a href="{% url 'articles:index' %}">홈으로</a>
 
 <br>
-{% if user.is_authenticated %}
+{% if article.user == request.user %}
   <a href="{% url 'articles:update' article.pk %}">수정</a>
   <!-- a 태그는 기본적으로 get으로 보냄 -->
   <!-- <a href="{% url 'articles:delete' article.pk %}">삭제</a> -->
@@ -20,7 +21,9 @@
     {% csrf_token %}
     <input type="submit" value="삭제">
   </form>
+{% endif %}
 
+{% if user.is_authenticated %}
 <form action="{% url 'articles:create_comment' article.pk %}" method='POST'>
   {% csrf_token %}
   {% bootstrap_form comment_form %}
@@ -28,11 +31,26 @@
 </form>
 {% endif %}
 
+<hr>
+<p>좋아요 : {{ article.like_users.count }}개 </p>
+<p>좋아하는 사람 : 
+  {% for arti in article.like_users.all %}
+    {{ arti }}
+  {% endfor %}
+</p>
+{% if user.is_authenticated %}
+{% if user in article.like_users.all %}
+  <a class='btn' href="{% url 'articles:like' article.pk %}">좋아요 취소</a>
+{% else %}
+  <a class='btn' href="{% url 'articles:like' article.pk %}">좋아요</a>
+{% endif %}
+{% endif %}
+
 
 <hr>
 <h2>댓글목록</h2>
 {% for comment in comments %}
-<p>{{ comment.content }}</p>
+<p>{{ comment.user }} : {{ comment.content }}</p>
 {% endfor %}
 
 <!-- {{ comment_form }} : 그냥 form d은 중괄호 두개 -->
