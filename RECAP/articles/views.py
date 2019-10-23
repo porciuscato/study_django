@@ -5,14 +5,21 @@ from IPython import embed
 from django.http import Http404, HttpResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from itertools import chain
 
 
 # Create your views here.
+@login_required
 def index(request):
     visits_num = request.session.get('visits', 0)
     request.session['visits'] = visits_num + 1
     request.session.modified = True
-    articles = Article.objects.all()
+    # articles = Article.objects.all()
+    # request.user.followings.values_list('pk', flat=True)
+    followings = request.user.followings.all()
+    followings_and_me = chain(followings, [request.user])
+    articles = Article.objects.filter(user__in=followings_and_me)
+    my_articles = request.user.article_set.all()
     context = {
         'articles' : articles,
         'visits' : visits_num,
@@ -192,9 +199,17 @@ def like(request, article_pk):
     # article_pk로 넘어온 글의 like_users에 현재 접속 중인 유저를 추가
     # request.user.like_articles.add(Article.objects.get(pk=article_pk))
     article = Article.objects.get(pk=article_pk)
-    if request.user in article.like_users.all():
-        article.like_users.remove(request.user)
+    user = request.user
+    # if request.user in article.like_users.all():
+    #     article.like_users.remove(user)
+    # else:
+    #     # request.user.like_articles.add(article)
+    #     article.like_users.add(user)
+    # return redirect(article)
+    # 만약 좋아요 리스트에 현재 접속 중이 유저가 있다면, 
+    if article.like_users.filter(pk=user.pk).exists():
+        article.like_users.remove(user)
+    # 아니면, 해당 유저는 아직 좋아요를 누르지 않았다.
     else:
-        # request.user.like_articles.add(article)
-        article.like_users.add(request.user)
+        article.like_users.add(user)
     return redirect(article)

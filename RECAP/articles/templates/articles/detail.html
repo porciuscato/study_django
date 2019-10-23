@@ -32,19 +32,21 @@
 {% endif %}
 
 <hr>
-<p>좋아요 : {{ article.like_users.count }}개 </p>
-<p>좋아하는 사람 : 
-  {% for arti in article.like_users.all %}
-    {{ arti }}
-  {% endfor %}
-</p>
-{% if user.is_authenticated %}
-{% if user in article.like_users.all %}
-  <a class='btn' href="{% url 'articles:like' article.pk %}">좋아요 취소</a>
-{% else %}
-  <a class='btn' href="{% url 'articles:like' article.pk %}">좋아요</a>
-{% endif %}
-{% endif %}
+<p>좋아요 : {{ article.like_users.count }}개</p>
+<p>좋아하는 사람 :
+  {% with likers=article.like_users.all %}
+    {% for liker in likers %}
+      {{ liker }}
+    {% endfor %}
+</p>  
+  {% if user.is_authenticated %}
+  {% if user in likers %}
+    <a class='btn' href="{% url 'articles:like' article.pk %}">좋아요 취소</a>
+  {% else %}
+    <a class='btn' href="{% url 'articles:like' article.pk %}">좋아요</a>
+  {% endif %}
+  {% endif %}
+{% endwith %}
 
 
 <hr>

@@ -492,3 +492,184 @@ Out[31]: 1
 
 
 <a href="/articles/:id/like/"></a>
+
+
+
+# 10월 23일
+
+- 게시글에 댓글 달고 좋아요까지! 자유롭게
+
+- DTL에서는 함수를 호출하더라도 변수를 부르듯이 쓴다. (DTL은 파이썬이 아니다)
+
+DB쿼리는 자주 호출하면 좋지 않다. 효율이 엄청 떨어진다.
+
+`exist()`
+
+filter 는 SQL의 where과 같다.
+
+ORM: .get() vs .filter()
+
+- get은 한 개 뽑을 때(LIMIT 1) -> 없을 때 에러가 발생하고
+- filter는 여러 개 뽑을 때 -> 없을 때 빈 쿼리 셋이 나온다(굳이 에러 핸들링 하지 말고 빈 쿼리셋을 다루는 게 낫다.)
+
+.exist() -> 필터를 줘서 가는 것 (이 쿼리 셋 안에 뭐라고 있니? 라고 물어보는 것)
+
+
+
+이런 코드가 문제일 수 있다.
+
+```html
+<p>좋아요 : {{ article.like_users.count }}개 </p>
+<p>좋아하는 사람 : 
+  {% for arti in article.like_users.all %}
+    {{ arti }}
+  {% endfor %}
+```
+
+ 굉장히 안 좋은 코드다. 비용이 크다.  all이 매번 불리게 된다. 불릴 때마다 DB에 쿼리를 보낸다 -> 그러므로 캐싱을 해야
+
+#### 캐싱
+
+with context 
+
+with template tag
+
+```html
+{% with total=business.employees.count %}
+    {{ total }} employee{{ total|pluralize }}
+{% endwith %}
+```
+
+
+
+```hrml
+<p>좋아요 : {{ article.like_users.count }}개 </p>
+<p>좋아하는 사람 :
+  {% with likers=article.like_users.all %} 
+    {% for liker in likers %}
+      {{ liker }}
+    {% endfor %}
+  {% endwith %}
+```
+
+-> 이로 인해 all은 한 번만 불리게 되었다!! -> 성능 대폭 개선
+
+
+
+### 프로필 만들기
+
+
+
+팔로우 만들기
+
+`User` follws `User`
+
+id(pk) / from_user_id / to_user_id
+
+팔로우 기능을 만들기 위해 새로 모델을 정의함!
+
+
+
+원래 바인딩 되어있던 칼럼을 고치는 건 상당히 위험
+
+모델 디자인...
+
+
+
+팔로우
+
+url 디자인
+
+```html
+<a href="/accounts/follow/1">팔로우</a>
+```
+
+
+
+
+
+```
+기획
+http://trello.com/
+https://www.notion.so/
+.
+디자인
+https://www.figma.com/
+.
+사진
+https://unsplash.com
+.
+코드 에디터
+https://code.visualstudio.com/
+.
+CSS 라이브러리
+https://tailwindcss.com
+https://bulma.io
+.
+깃 저장소
+https://github.com/
+https://about.gitlab.com/
+https://bitbucket.org/product
+.
+클라이언트
+https://insomnia.rest  (REST)
+https://altair.sirmuel.design (GraphQL)
+.
+검색엔진
+https://www.algolia.com
+.
+유저 비밀번호 관리
+https://auth0.com/
+https://aws.amazon.com/ko/cognito/
+.
+이메일
+https://www.mailgun.com/
+https://mailchimp.com
+.
+SSL Certificate
+https://letsencrypt.org/
+.
+백엔드
+https://www.heroku.com/
+https://aws.amazon.com/
+.
+프론트엔드
+https://pages.github.com/
+https://www.netlify.com/
+.
+서버리스
+https://aws.amazon.com/lambda/
+https://cloud.google.com/functions/
+.
+데이터베이스,
+https://aws.amazon.com/dynamodb/
+https://cloud.google.com/firestore/
+https://www.mongodb.com/cloud/atlas
+https://fauna.com/
+.
+파일 업로드
+https://cloud.google.com/storage/
+https://cloudinary.com/
+.
+에러 리포팅
+https://sentry.io
+.
+채팅
+https://pusher.com
+.
+푸쉬알림
+https://onesignal.com/
+.
+피드
+getstream.io
+.
+분석
+analytics.google.com/
+https://www.hotjar.com
+https://mixpanel.com/
+.
+시간관리
+https://wakatime.com/
+```
+
+ https://thevc.kr/ 
