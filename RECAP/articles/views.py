@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Article
+from .models import Article, Hashtag
 from .forms import ArticleForm, CommentForm
 from IPython import embed
 from django.http import Http404, HttpResponse
@@ -77,12 +77,15 @@ def create(request):
         # 사실 위 처럼 적을 필요 없이
         # form.save()
         # 하면 자동으로 저장됨
+            # hashtag 작업
+            for word in article.content.split():
+                if word.startswith('#'):
+                    # (객체, True or False) 를 return
+                    hashtag, created =  Hashtag.objects.get_or_create(content=word)
+                    article.hashtags.add(hashtag)
             return redirect(article)
         else:
             return redirect('articles:create')
-
-
-
 ###############################################
         # title = request.POST.get('title')
         # content = request.POST.get('content')
@@ -101,7 +104,6 @@ def create(request):
         # redirect 에 객체만 전달했는데도 detail 페이지를 띠우더라
         # 객체 안에 absoulute_url이 있는지 확인한 뒤 redirct를 해준다
         # 객체가 들어오면 해당하는 객체가 있는지 없는지 판단하는 것이 있음
-
     else:
         form = ArticleForm()
         context = {
@@ -213,3 +215,29 @@ def like(request, article_pk):
     else:
         article.like_users.add(user)
     return redirect(article)
+
+def explore(request):
+    articles = Article.objects.all()
+    context = {
+        'articles': articles,
+    }
+    return render(request, 'articles/explore.html', context)
+
+
+def tags(request):
+    tags = Hashtag.objects.all()
+    context = {
+        'tags' : tags,
+    }
+    return render(request, 'articles/tags.html', context)
+
+
+def hashtag(request, hashtag_pk):
+    hashtag = get_object_or_404(Hashtag, pk=hashtag_pk)
+    # related_name을 정의하지 않으면 _set이 자동으로 생성된다.
+    articles = hashtag.article_set.all()
+    context = {
+        'hashtag' : hashtag,
+        'articles' : articles,
+    }
+    return render(request, 'articles/hashtag.html', context)

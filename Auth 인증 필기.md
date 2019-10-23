@@ -673,3 +673,21 @@ https://wakatime.com/
 ```
 
  https://thevc.kr/ 
+
+
+
+### 해시태그
+
+태그는 한 테이블에 다 모아서 manyTomany 관계를 가질 수 있다.
+
+
+
+ORM의 장단점은?
+
+- lazyloading? : 코드가 쓰여지자마자 바로 DB에 쿼리를 보내지 않는다. 해당하는 코드가 돌아갈 때, fetch에 이르러 한 번만 요청함. 
+  - 그래서 오히려 ORM에 의존하는 것이 더 유리하기도 하다. 
+  - with 를 쓰지 않더라도 호출이 한 번만 이뤄지기 때문에 성능에서 크게 차이나지 않는다.
+
+ http://raccoonyy.github.io/using-django-querysets-effectively-translate/ 
+
+도널드 크누스
