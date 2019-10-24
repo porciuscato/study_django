@@ -1,0 +1,118 @@
+[
+{
+  "model": "articles.hashtag",
+  "pk": 1,
+  "fields": {
+    "content": "#\ud574\uc2dc\ud0dc\uadf8"
+  }
+},
+{
+  "model": "articles.hashtag",
+  "pk": 2,
+  "fields": {
+    "content": "#\uc0dd\uc131"
+  }
+},
+{
+  "model": "articles.hashtag",
+  "pk": 3,
+  "fields": {
+    "content": "#\ub418\ub824\ub098"
+  }
+},
+{
+  "model": "articles.article",
+  "pk": 1,
+  "fields": {
+    "title": "\ub77c\uace0 \ub2f5\ud560 \uac78 \ubaa8\ub450\ub2e4",
+    "content": "\ub0b4\uac00 \uc798 \uc0ac\ub294 \uc904 \ub2e4\uc544\uc544 \ub2c8\uae4c \uadf8 \uc54c\ub7c9\ud55c \uc790\uc874\uc2ec \ub54c\ubb38\uc5d0",
+    "created_at": "2019-10-23T04:03:34.845Z",
+    "updated_at": "2019-10-23T04:03:34.845Z",
+    "user": 1,
+    "like_users": [
+      1
+    ],
+    "hashtags": []
+  }
+},
+{
+  "model": "articles.article",
+  "pk": 2,
+  "fields": {
+    "title": "\ub0b4 \ud131\ub05d\uae4c\uc9c0 \uc228\uc774 \ucc28\uc62c\ub77c",
+    "content": "\ub0b4 \uba38\ub9ac \uc704\ub85c \ubc14\ub78c\uc774 \ubd88\uc5b4\uc628\ub2e4",
+    "created_at": "2019-10-23T04:19:19.068Z",
+    "updated_at": "2019-10-23T04:19:19.068Z",
+    "user": 2,
+    "like_users": [
+      1
+    ],
+    "hashtags": []
+  }
+},
+{
+  "model": "articles.article",
+  "pk": 3,
+  "fields": {
+    "title": "\uc9c0\uc218\uac00 \uc4f4 \uae00",
+    "content": "\uc9c0\uc218",
+    "created_at": "2019-10-23T04:26:50.654Z",
+    "updated_at": "2019-10-23T04:26:50.654Z",
+    "user": 2,
+    "like_users": [],
+    "hashtags": []
+  }
+},
+{
+  "model": "articles.article",
+  "pk": 4,
+  "fields": {
+    "title": "\ud574\uc2dc\ud0dc\uadf8 \ub418\ub098?",
+    "content": "\uc774\ub807\uac8c \uc4f0\uba74? #\ud574\uc2dc\ud0dc\uadf8 #\uc0dd\uc131 #\ub418\ub824\ub098",
+    "created_at": "2019-10-23T05:47:33.459Z",
+    "updated_at": "2019-10-23T05:47:33.459Z",
+    "user": 2,
+    "like_users": [],
+    "hashtags": []
+  }
+},
+{
+  "model": "articles.article",
+  "pk": 5,
+  "fields": {
+    "title": "\ud574\uc2dc\ud0dc\uadf8 \ub418\ub098?",
+    "content": "\uc774\ub807\uac8c \uc4f0\uba74? #\ud574\uc2dc\ud0dc\uadf8 #\uc0dd\uc131 #\ub418\ub824\ub098",
+    "created_at": "2019-10-23T05:48:20.144Z",
+    "updated_at": "2019-10-23T05:48:20.144Z",
+    "user": 2,
+    "like_users": [],
+    "hashtags": [
+      1,
+      2,
+      3
+    ]
+  }
+},
+{
+  "model": "articles.comment",
+  "pk": 1,
+  "fields": {
+    "article": 2,
+    "user": 1,
+    "content": "\uc774\uac74 \uc9c0\uc218\uac00 \uc4f4 \uae00\uc774\uace0 \ub313\uae00\uc740 \uce74\ud1a0\uac00 \ub2ec\uc558\uc5b4",
+    "created_at": "2019-10-23T04:30:01.276Z",
+    "updated_at": "2019-10-23T04:30:01.276Z"
+  }
+},
+{
+  "model": "articles.comment",
+  "pk": 2,
+  "fields": {
+    "article": 1,
+    "user": 2,
+    "content": "\uc774\uac74 \uce74\ud1a0\uac00 \uc4f4 \uae00\uc774\uace0 \uc9c0\uc218\uac00 \ub313\uae00\uc744 \ub2ec\uc558\uc5b4",
+    "created_at": "2019-10-23T04:30:34.341Z",
+    "updated_at": "2019-10-23T04:30:34.341Z"
+  }
+}
+]

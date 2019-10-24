@@ -691,3 +691,191 @@ ORM의 장단점은?
  http://raccoonyy.github.io/using-django-querysets-effectively-translate/ 
 
 도널드 크누스
+
+
+
+
+
+# 10월 24일
+
+- Gravatar
+
+
+
+서버사이드 앱과 앱이 배포되는 과정에서 front-end를 담당하는 서버가 분리되기 시작.
+
+SPA(single page aplication) : 페이지 로드 없이 사용 (react, view, angular 등 덕분에 유명해짐)
+
+이것들만 돌려주는 프런트앤드 서버만 따로 만듬(경량형 서버를 사용. MERN(몽고 DB - json의 데이터베이스화)(익스프레스), (리엑트), (Node.js - 사실은 자바스크립트))
+
+
+
+NoSQL
+
+RDBMS는 스키마가 있어야 한다. 그런데 NoSQL은 비정형 데이터처럼, json 파일 하나를 데이터베이스처럼 씀. 이를 Document라고 함.
+
+트위터 등을 관계형 데이터로 사용하다보니 칼럼이 너무나 많아졌음. 그래서 write를 빠르게 할 수 있는 방법을 찾던 중... 글 하나하나를 빠르게 만드는 방법으로 NoSQL이 유명해짐
+
+
+
+template이 분리가 된...
+
+
+
+MSA
+왜 점점 자바가 효용 가치가 잃어가는가... 가장 적합한 언어를 쓰는게 좋은데.. 데이터 분석이 파이썬으로 이루어지기 때문. 
+
+여러 가지 언어가 쓰임. 각 환경이나 프로그램에 적합한 언어를 쓸 수 있어야 한다. 
+
+어디로 가는지에 따라 뭘 배우는지가 달라진다...
+
+
+
+이제 우리는... 장고를 API 서버로만 바꾸게 될 것. 복잡한 DB 구성은 장고에게 맡기고 템플릿 단계에서는 자바 스크립트에게 넘겨줄 것
+
+장고로 그걸 어떻게 해야할지 보게 될 것
+
+
+
+### API 서버 만들기
+
+- django rest framework 다운받기
+
+```
+pip install djangorestframework
+```
+
+django DRF
+
+ https://www.django-rest-framework.org/ 
+
+settings.py 에 추가할 땐
+
+```python
+INSTALLED_APPS = [
+    'rest_framework',
+    'django.contrib.admin',
+    ....
+]
+```
+
+지금까지는 settings.py에 앱 이름을 그냥 추가했었는데...
+
+```python
+'musics.apps.MusicsConfig',
+```
+
+이젠 이런 식으로 해보자.
+
+dummy data
+
+
+
+
+
+dumping 하는 방법?
+
+`python manage.py dumpdata music > dummy.json`
+
+- 우린 이미 json 파일을 가지고 있으니까..
+
+  `python manage.py loaddata musics/dummy.json`
+
+  - 이것의 반대 방향이 dumpdata
+
+  가령(데이터 베이스에 있는 자료를 json 파일로 만듦)
+
+  `python manage.py dumpdata articles > dummy.json --indent 2`
+
+  하면 json 파일로 받을 수 있음
+
+  이것이 덤핑
+
+  이제는 요청이 들어오면 json 파일로 보내보자
+
+  
+
+요청이 들어올 때 html이 아니라 json 파일을 덤핑하려면?
+
+
+
+article의 상세 페이지처럼..
+
+
+
+#### API 자동 완성 : yasg
+
+API는 반드시 문서가 잘 만들어져야 함 -> 그런데 귀찮으니까 API를 자동으로 만들어주는 툴이 있음
+
+ https://github.com/axnsan12/drf-yasg 
+
+`pip install drf-yasg`
+
+
+
+
+
+RESTful API
+
+#### Music : Comment  = 1 : N
+
+```
+# Music REST API
+C			POST	/musics/
+R(list) 	GET		/musics/
+R(detail)	GET 	/musics/:pk
+U			PUT		/musics/:pk
+D			DELETE	/musics/:pk
+
+# Comment REST API
+C			POST	/musics/:pk/comments
+R(list) 	GET		/musics/:pk/comments
+R(detail)	GET 	/musics/:pk/comments/:pk
+U			PUT		/musics/:pk/comments/:pk
+D			DELETE	/musics/:pk/comments/:pk
+```
+
+url에는 목적어만 나와있고 동사는 POST, GET 등으로 빠져있다.
+
+
+
+
+
+페이스북은 url을 그래프ql. graphQL
+
+url을 쿼리 문장으로 바꾼다!
+
+요청을 보낼 때 json으로 보냄
+
+payload
+
+url 만으로는 파악하기 어려워서 payload도 확인을 해야 서버에 어떤 요청이 가는지 알 수 있다.
+
+
+
+포스트맨
+
+ https://www.getpostman.com/downloads/ 
+
+get 요청이 아닌 post나 put 요청은 브라우저로 할 수 없어서 포스트맨을 사용한다.
+
+
+
+
+
+```
+<월말 공지>
+• Django 프로젝트가 주어지며, 문제에 제시된 기능을 구현합니다.
+범위는 다음과 같으며, 기능에 필요한 예외처리를 포함하여 구현 하여야 합니다.
+1. 게시글 CRUD 및 댓글 작성
+2. 회원가입 및 로그인/로그아웃
+3. 좋아요 기능
+단, 기능 구현시 CSS로 꾸미거나 하는 내용은 없습니다.
+•  아래의 사항은 모두 금지 합니다.
+1. 시험 문제와 무관한 소스코드 작성 (HTML, CSS 포함)
+2. django를 제외한 pip 패키지 사용
+3. visual studio code 이외의 환경 사용 및 추가 확장 프로그램(extension) 설치 (sqlite는 가능) (edited) 
+```
+
+
+
