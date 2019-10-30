@@ -879,3 +879,52 @@ get 요청이 아닌 post나 put 요청은 브라우저로 할 수 없어서 포
 
 
 
+
+
+
+
+
+
+
+
+
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### 월욜 과목평가
+
+sql은 pdf위주로
+
+**<과목평가 공지>**
+• SQL (슬라이드 전범위)
+• Django ORM (쿼리 및 현재까지 배운 모든 내용) (edited) 
+
+SQL & ORM : https://gist.github.com/edu-john/cd8fa1016093ab06583d44cf0388e22e (edited) 
+
+ORM & Relation : https://gist.github.com/edu-john/34772fa8b4ecb22d86e92d90d4acef63
+
+
+
+그냥 쉘은 다 불러와야 한다.
+
+쉘 플러스는 알아서 다 import 해준다.
+
+
+
+중개모델을 쓰게 되면 불편한 점??
+
+중개모델 없이 쓰는 법을 익히자

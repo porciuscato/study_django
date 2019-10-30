@@ -15,7 +15,7 @@
   <div class="container">
     {% if user.is_authenticated %}
       <p>안녕! {{ user.username }}</p>
-      <a class='btn btn-dark' href="{% url 'profile' user.username %">모아보기</a>
+      <a class='btn btn-dark' href="{% url 'profile' user.username %}">모아보기</a>
       <a class='btn btn-warning' href="{% url 'articles:explore' %}">탐험하기</a>
       <a class='btn btn-primary' href="{% url 'articles:create' %}">새글쓰기</a>
       <a class='btn btn-light' href="{% url 'articles:index' %}">홈으로</a>
