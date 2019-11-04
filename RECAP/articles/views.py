@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Article, Hashtag
 from .forms import ArticleForm, CommentForm
 from IPython import embed
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from itertools import chain
@@ -211,10 +211,18 @@ def like(request, article_pk):
     # 만약 좋아요 리스트에 현재 접속 중이 유저가 있다면, 
     if article.like_users.filter(pk=user.pk).exists():
         article.like_users.remove(user)
+        liked = False
     # 아니면, 해당 유저는 아직 좋아요를 누르지 않았다.
     else:
         article.like_users.add(user)
-    return redirect(article)
+        liked = True
+    # return redirect(article)
+    context = {
+        'liked' : liked,
+        'count' : article.like_users.count(),
+        'like_users' : 0,
+    }
+    return JsonResponse(context)
 
 def explore(request):
     articles = Article.objects.all()

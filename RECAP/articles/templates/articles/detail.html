@@ -39,19 +39,19 @@
 </p>
 
 <hr>
-<p>좋아요 : {{ article.like_users.count }}개</p>
+<p>좋아요 : <span id="like_count">{{ article.like_users.count }}</span>개</p>
 <p>좋아하는 사람 :
-  {% with likers=article.like_users.all %}
-    {% for liker in likers %}
-      {{ liker }}
-    {% endfor %}
+{% with likers=article.like_users.all %}
+  {% for liker in likers %}
+     {{ liker }}
+   {% endfor %}
 </p>  
   {% if user.is_authenticated %}
-  {% if user in likers %}
-    <a class='btn' href="{% url 'articles:like' article.pk %}">좋아요 취소</a>
-  {% else %}
-    <a class='btn' href="{% url 'articles:like' article.pk %}">좋아요</a>
-  {% endif %}
+    {% if user in article.like_users.all %}
+      <button data-gogo="hello" data-name="cato" data-id="{{ article.pk }}" class='btn btn-secondary' id='like_button'>좋아요 취소</button>
+    {% else %}
+      <button data-gogo="hello" data-name="cato" data-id="{{ article.pk }}" class='btn btn-primary' id='like_button'>좋아요</button>
+    {% endif %}      
   {% endif %}
 {% endwith %}
 
@@ -62,5 +62,33 @@
   <p>{{ comment.user }} : {{ comment.content }}</p>
 {% endfor %}
 
-<!-- {{ comment_form }} : 그냥 form d은 중괄호 두개 -->
+<script>
+  // 좋아요 버튼을 클릭하면, 좋아요 DB를 업데이트 하고 버튼을 바꾼다. (addEventListener))
+  const like_button = document.querySelector('#like_button')
+  like_button.addEventListener('click', function(e) {
+    // 좋아요 DB 업데이트 == articles/:id/like 요청을 보낸다.
+    const article_id = e.srcElement.dataset.id
+    axios.get(`/articles/${article_id}/like`)
+        .then(response => {
+          console.log(response.data)
+          if (response.data.liked) {
+            e.target.classList.remove('btn-primary')
+            e.target.classList.add('btn-secondary')
+            e.target.innerText = '좋아요 취소'
+            document.querySelector('#like_count').innerText++
+          }
+          else {
+            e.target.classList.remove('btn-secondary')
+            e.target.classList.add('btn-primary')
+            e.target.innerText = '좋아요'
+            document.querySelector('#like_count').innerText--
+          }
+        })
+    
+  })
+  
+
+  // 버튼을 '좋아요 취소'로 바꾸는 것
+
+</script>
 {% endblock %}

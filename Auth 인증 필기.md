@@ -819,21 +819,23 @@ RESTful API
 
 #### Music : Comment  = 1 : N
 
-```
-# Music REST API
-C			POST	/musics/
-R(list) 	GET		/musics/
-R(detail)	GET 	/musics/:pk
-U			PUT		/musics/:pk
-D			DELETE	/musics/:pk
+##### Music REST API
 
-# Comment REST API
-C			POST	/musics/:pk/comments
-R(list) 	GET		/musics/:pk/comments
-R(detail)	GET 	/musics/:pk/comments/:pk
-U			PUT		/musics/:pk/comments/:pk
-D			DELETE	/musics/:pk/comments/:pk
-```
+| C         | POST   | /music/    |
+| --------- | ------ | ---------- |
+| R(list)   | GET    | /music/    |
+| R(detail) | GET    | /music/:pk |
+| U         | PUT    | /music/:pk |
+| D         | DELETE | /music/:pk |
+
+##### Comment REST API
+
+| C         | POST   | /music/:pk/comments     |
+| --------- | ------ | ----------------------- |
+| R(list)   | GET    | /music/:pk/comments     |
+| R(detail) | GET    | /music/:pk/comments/:pk |
+| U         | PUT    | /music/:pk/comments/:pk |
+| D         | DELETE | /music/:pk/comments/:pk |
 
 url에는 목적어만 나와있고 동사는 POST, GET 등으로 빠져있다.
 
@@ -928,3 +930,45 @@ ORM & Relation : https://gist.github.com/edu-john/34772fa8b4ecb22d86e92d90d4acef
 중개모델을 쓰게 되면 불편한 점??
 
 중개모델 없이 쓰는 법을 익히자
+
+
+
+
+
+# fixture
+
+- 미리 만들어놓은 json 파일을 db에 적용시키자.
+
+- 방법
+
+  - 먼저 DB를 만든다.
+
+  - json 파일이 가지고 있는 모델명에 해당하는 app에 fixtures 폴더를 만든다.
+
+    ```json
+    // 가령 이 데이터는 model이 Movie이기 때문에 movies에서 정의한 Moive 모델과 맞추기 위해 movies 앱 하부에 fixture 폴더를 만들도록 한다.
+    {
+            "pk": 10,
+            "model": "movies.Movie",
+            "fields": {
+                "title": "터미네이터2 3D",
+                "audience": 11744,
+                "poster_url": "https://movie-phinf.pstatic.net/20191010_99/1570669194041iWfdl_JPEG/movie_image.jpg",
+                "description": "인간과 기계의 대전쟁.. 그를 지키지 않으면 미래 또한 없다!\n미래, 인류와 기계의 전쟁은 계속 되는 가운데 스카이넷은 인류 저항군 사령관 존 코너를 없애기 위해 액체 금속형 로봇인 T-1000을 과거의 어린 존 코너에게로 보낸다. 미래의 인류 운명을 쥔 어린 존 코너. 스카이넷의 T-1000은 거침없이 숨 가쁜 추격을 시작하는데…",
+                "genre_id": 8
+            }
+        }
+    ```
+
+  - 이 안에 DB에 넣을 json 파일을 넣는다.
+
+  - load 명령어를 입력한다.
+
+    ```shell
+    $ python manage.py loaddata genre.json
+    $ python manage.py loaddata movie.json
+    ```
+
+    
+
+    
